@@ -1,0 +1,14 @@
+# TYPEORM ----------------------
+DB_HOST=localhost
+DB_USERNAME=dev
+DB_PASSWORD=Abc12345
+DB_DATABASE=gi
+DB_PORT=1433
+DB_SYNCHRONIZE=true
+DB_LOGGING=false
+API_PORT=4000
+
+# JWT_CONFIGURATIONS -------------------
+SECRET_JWT_KEY="fg4rf4trw4twe$%#$^%$&#@@#FDSFñasdadwrq"
+TOKEN_EXPIRE=1h
+REFRESH_TOKEN_EXPIRE=1h
