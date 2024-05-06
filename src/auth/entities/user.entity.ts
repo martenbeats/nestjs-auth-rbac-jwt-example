@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -21,6 +23,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: true })
+  active: boolean;
+
   @Column()
   rolId: number;
   @ManyToOne(() => Rol, (rol) => rol.users, {
@@ -28,4 +33,14 @@ export class User {
   })
   @JoinColumn({ name: 'rolId' })
   rol?: Rol;
+
+  @BeforeInsert()
+  checkFieldsBeforeInsert() {
+    this.email = this.email.toLowerCase().trim();
+  }
+
+  @BeforeUpdate()
+  checkFieldsBeforeUpdate() {
+    this.checkFieldsBeforeInsert();
+  }
 }

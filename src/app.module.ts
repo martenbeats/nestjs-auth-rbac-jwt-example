@@ -8,7 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
@@ -22,12 +21,14 @@ import { ConfigModule } from '@nestjs/config';
         // MSSQL-specific option
         encrypt: false,
       },
-      synchronize: true, //use this with development environment
+      //use this with development environment
+      synchronize: true,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
     AuthModule,
     SeedModule,
     BookModule,
   ],
+  exports: [ConfigModule],
 })
 export class AppModule {}

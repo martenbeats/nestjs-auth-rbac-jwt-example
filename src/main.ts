@@ -27,7 +27,6 @@ async function bootstrap() {
     .setTitle('Auth Jwt Example')
     .setDescription('Open Api Auth Jwt Example')
     .setVersion('1.0')
-    .addBearerAuth()
     .setExternalDoc('Postman Collection', '/api-json')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -39,5 +38,4 @@ async function bootstrap() {
 
   logger.log(`Api is running on port: ${process.env.API_PORT}`);
 }
-
 bootstrap();

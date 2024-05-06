@@ -27,6 +27,7 @@ export class SeedService {
       user.username = faker.internet.userName();
       user.email = faker.internet.email();
       user.password = bcrypt.hashSync('secret', 10);
+      user.active = true;
       user.rolId = rolId;
 
       userData.push(user);
