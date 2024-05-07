@@ -19,7 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          secret: configService.get('SECRET_JWT_KEY'),
+          secret: `${configService.get('JWT_SECRET')}`,
           signOptions: {
             expiresIn: `${configService.get('REFRESH_TOKEN_EXPIRE')}`,
           },
@@ -27,7 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
     }),
   ],
-  exports: [AuthModule, PassportModule, JwtModule, TypeOrmModule],
+  exports: [JwtStrategy, PassportModule, JwtModule, TypeOrmModule],
   providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

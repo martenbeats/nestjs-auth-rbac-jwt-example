@@ -20,7 +20,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedModule } from './seed/seed.module';
 import { BookModule } from './book/book.module';
 import { ConfigModule } from '@nestjs/config';
-import { EnvConfiguration } from './config/configuration';
 
 @Module({
   imports: [
@@ -50,7 +49,21 @@ import { EnvConfiguration } from './config/configuration';
 })
 export class AppModule {}
 
+
 ```
+
+````typescript
+//src/auth/enums/valid-roles.ts
+export enum ValidRoles {
+  admin = 'Admin',
+  moderator = 'Moderator',
+  guest = 'Guest',
+}
+
+export const META_ROLES = 'roles';
+
+
+````
 
 ### 1- Import modules PassportModule and JwtModule
 ```typescript 
@@ -67,7 +80,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   controllers: [AuthController],
-  exports: [PassportModule, JwtModule, TypeOrmModule],
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([User]),
@@ -77,7 +89,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          secret: configService.get('SECRET_JWT_KEY'),
+          secret: configService.get('JWT_SECRET'),
           signOptions: {
             expiresIn: `${configService.get('TOKEN_EXPIRE')}`,
           },
@@ -85,6 +97,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
     }),
   ],
+  exports: [PassportModule, JwtModule, TypeOrmModule],
   providers: [AuthService],
 })
 export class AuthModule {}
@@ -111,8 +124,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     @InjectRepository(User) private readonly repositoryUser: Repository<User>,
   ) {
     super({
-      secretOrKey: configService.get('SECRET_JWT_KEY'),
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken,
+      secretOrKey: configService.get('JWT_SECRET'),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
 
@@ -159,7 +172,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          secret: configService.get('SECRET_JWT_KEY'),
+          secret: configService.get('JWT_SECRET'),
           signOptions: {
             expiresIn: `${configService.get('TOKEN_EXPIRE')}`,
           },
@@ -249,5 +262,21 @@ export const Authorization = (...roles: ValidRoles[]) => {
     UseGuards(AuthGuard(), UserRoleGuard),
   );
 };
+
+````
+
+### 5- Decorate your routes in your controller using Authorization decorator
+
+````typescript
+//src/auth/auth.controller.ts
+
+@Get('guardtest')
+@Authorization(ValidRoles.guest)
+guardTest() {
+  return {
+    ok: true,
+    message: 'ruta privada',
+  };
+}
 
 ````
