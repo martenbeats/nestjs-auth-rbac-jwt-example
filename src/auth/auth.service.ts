@@ -71,4 +71,27 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     return token;
   }
+
+   async generateRefreshToken(id: string) {
+    const user = await this.userModel.findOne({ _id: id }).exec();
+
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+    const userObj = user.toObject();
+
+    //remove password prop
+    delete userObj.password;
+
+    return { user: userObj, accessToken: this.getJwtToken({ id: user.id }) };
+  }
+
+  async verifyRefreshToken(refreshToken: string): Promise<JwtPayloadInt> {
+    try {
+      const decoded = this.jwtService.verify(refreshToken);
+      return decoded;
+    } catch (error) {
+      // Handle token verification errors (e.g., expired token, invalid signature)
+      // You can throw a custom exception or handle it based on your application's requirements
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
 }

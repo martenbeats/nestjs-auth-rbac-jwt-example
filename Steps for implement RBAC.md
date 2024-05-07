@@ -5,7 +5,7 @@
 ## Packages  
 
 ```bash
-$ npm install @nestjs/jwt @nestjs/passport passport-jwt passport
+$ npm install @nestjs/jwt @nestjs/passport passport-jwt passport class-validator class-transformer @nestjs/swagger @nestjs/typeorm typeorm [your_db_driver]
 ```
 
 ```bash
