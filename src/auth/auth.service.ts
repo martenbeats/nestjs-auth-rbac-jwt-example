@@ -81,7 +81,7 @@ export class AuthService {
     //remove password prop
     delete userObj.password;
 
-    return { user: userObj, accessToken: this.getJwtToken({ id: user.id }) };
+    return { user: userObj, accessToken: this.getJwt({ id: user.id }) };
   }
 
   async verifyRefreshToken(refreshToken: string): Promise<JwtPayloadInt> {

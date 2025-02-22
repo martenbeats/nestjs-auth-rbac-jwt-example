@@ -5,7 +5,7 @@
 ## Packages  
 
 ```bash
-$ npm install @nestjs/jwt @nestjs/passport passport-jwt passport class-validator class-transformer @nestjs/swagger @nestjs/typeorm typeorm [your_db_driver]
+$ npm install @nestjs/config @nestjs/jwt @nestjs/passport passport-jwt passport class-validator class-transformer @nestjs/swagger @nestjs/typeorm typeorm [your_db_driver]
 ```
 
 ```bash
@@ -259,7 +259,7 @@ import { UserRoleGuard } from '../guards/user-role.guard';
 export const Authorization = (...roles: ValidRoles[]) => {
   return applyDecorators(
     RoleProtected(...roles),
-    UseGuards(AuthGuard(), UserRoleGuard),
+    UseGuards(AuthGuard('jwt'), UserRoleGuard),
   );
 };
 
